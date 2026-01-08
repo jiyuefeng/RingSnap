@@ -12,6 +12,8 @@ export interface UrlRule {
   icon: string;
   /** 是否启用 */
   enabled?: boolean;
+  /** 图标服务商索引（0-6） */
+  iconSourceIndex?: number;
 }
 
 /**

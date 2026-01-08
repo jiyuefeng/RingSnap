@@ -24,7 +24,7 @@
             @click="startEditRule(index)"
           >
             <div class="rule-icon-wrapper">
-              <IconLoader :domain="rule.icon" :size="28" />
+              <IconLoader :domain="rule.icon" :size="28" :initial-source-index="rule.iconSourceIndex || 0" />
             </div>
             <div class="rule-info">
               <span class="rule-name">{{ rule.name }}</span>
@@ -88,10 +88,18 @@
               placeholder="例如：163.com"
               class="form-input"
             />
-            <div class="icon-preview">
-              <IconLoader v-if="formData.icon" :domain="formData.icon" :size="36" />
+            <div class="icon-preview" title="点击图标可切换服务商">
+              <IconLoader 
+                v-if="formData.icon" 
+                :domain="formData.icon" 
+                :size="36" 
+                :allow-switch="true"
+                :initial-source-index="formData.iconSourceIndex || 0"
+                @switch="onIconSwitch"
+              />
             </div>
           </div>
+          <span class="form-hint">💡 点击图标可切换不同的图标服务商</span>
         </div>
 
         <!-- 测试区域 -->
@@ -349,6 +357,7 @@ const formData = reactive<UrlRule>({
   pattern: '',
   url: '',
   icon: '',
+  iconSourceIndex: 0,
 });
 
 // 测试状态
@@ -424,6 +433,11 @@ async function toggleRule(index: number) {
   const newEnabled = rule.enabled === false ? true : false;
   configStore.updateRule(index, { ...rule, enabled: newEnabled });
   await configStore.saveConfig();
+}
+
+// 图标服务切换处理
+function onIconSwitch(sourceIndex: number) {
+  formData.iconSourceIndex = sourceIndex;
 }
 
 // 运行测试

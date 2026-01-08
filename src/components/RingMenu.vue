@@ -137,7 +137,7 @@
             @mouseleave="hoveredIndex = -1"
             @click="handleItemClick(item.targetUrl)"
           >
-            <IconLoader :domain="item.rule.icon" :size="36" :alt="item.rule.name" />
+            <IconLoader :domain="item.rule.icon" :size="36" :alt="item.rule.name" :initial-source-index="item.rule.iconSourceIndex || 0" />
             <span class="icon-index">{{ index + 1 }}</span>
           </div>
         </div>
