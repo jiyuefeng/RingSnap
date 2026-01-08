@@ -47,26 +47,6 @@
                 @mouseleave="hoveredIndex = -1"
                 @click="handleItemClick(item.targetUrl)"
               />
-              
-              <!-- 扇区内的文字 -->
-              <g 
-                :transform="getLabelTransform(index)"
-                class="sector-label-group"
-                @mouseenter="hoveredIndex = index"
-                @mouseleave="hoveredIndex = -1"
-                @click="handleItemClick(item.targetUrl)"
-              >
-                <text 
-                  y="22"
-                  text-anchor="middle" 
-                  fill="rgba(255, 255, 255, 0.95)"
-                  font-size="12"
-                  font-weight="500"
-                  class="sector-text"
-                >
-                  {{ item.rule.name }}
-                </text>
-              </g>
             </g>
             
             <!-- 分隔线 -->
@@ -115,8 +95,9 @@
                 class="settings-bg"
               />
               <text 
-                y="33"
+                y="28"
                 text-anchor="middle" 
+                dominant-baseline="central"
                 fill="rgba(255, 255, 255, 0.7)"
                 font-size="14"
                 class="settings-icon"
@@ -130,15 +111,18 @@
           <div
             v-for="(item, index) in menuItems"
             :key="'icon-' + index"
-            class="floating-icon"
+            class="menu-item-wrapper"
             :class="{ 'is-hovered': hoveredIndex === index }"
             :style="getIconPosition(index)"
             @mouseenter="hoveredIndex = index"
             @mouseleave="hoveredIndex = -1"
             @click="handleItemClick(item.targetUrl)"
           >
-            <IconLoader :domain="item.rule.icon" :size="36" :alt="item.rule.name" :initial-source-index="item.rule.iconSourceIndex || 0" />
-            <span class="icon-index">{{ index + 1 }}</span>
+            <div class="floating-icon">
+              <IconLoader :domain="item.rule.icon" :size="36" :alt="item.rule.name" :initial-source-index="item.rule.iconSourceIndex || 0" />
+              <span class="icon-index">{{ index + 1 }}</span>
+            </div>
+            <span class="item-label">{{ item.rule.name }}</span>
           </div>
         </div>
         
@@ -231,32 +215,45 @@ const getSectorPath = (index: number): string => {
   `;
 };
 
-// 获取标签位置变换
+// 获取标签位置变换 - 文字放在图标下方
 const getLabelTransform = (index: number): string => {
   const count = props.menuItems.length;
   const sectorAngle = (Math.PI * 2) / count;
   const midAngle = getAngle(index) + sectorAngle / 2;
   
-  // 标签放在扇形中间位置
-  const labelRadius = (innerRadius + outerRadius) / 2;
+  // 文字与图标使用相同的半径，但向下偏移
+  const labelRadius = innerRadius + (outerRadius - innerRadius) * 0.55;
   const x = labelRadius * Math.cos(midAngle);
   const y = labelRadius * Math.sin(midAngle);
   
   return `translate(${x}, ${y})`;
 };
 
-// 获取图标的位置
+// 文字始终水平居中对齐
+const getLabelAnchor = (): string => {
+  return 'middle';
+};
+
+// 文字始终在坐标点上方显示（即图标下方）
+const getLabelBaseline = (): string => {
+  return 'hanging';
+};
+
+// 获取菜单项的位置 - 图标+文字整体居中
 const getIconPosition = (index: number) => {
   const count = props.menuItems.length;
   const sectorAngle = (Math.PI * 2) / count;
   const midAngle = getAngle(index) + sectorAngle / 2;
   
-  const labelRadius = (innerRadius + outerRadius) / 2;
+  // 整体放在扇形区域的中心
+  const iconRadius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const centerX = outerRadius + 10;
   const centerY = outerRadius + 10;
   
-  const x = centerX + labelRadius * Math.cos(midAngle) - 14;
-  const y = centerY + labelRadius * Math.sin(midAngle) - 28;
+  // 居中对齐（图标宽度40px，需要偏移20px）
+  const x = centerX + iconRadius * Math.cos(midAngle) - 20;
+  // 整体向上偏移一点，给文字留空间
+  const y = centerY + iconRadius * Math.sin(midAngle) - 30;
   
   return {
     left: `${x}px`,
@@ -351,7 +348,6 @@ onUnmounted(() => {
 .pie-menu {
   position: relative;
   z-index: 10;
-  filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.2));
 }
 
 .sector-path {
@@ -382,15 +378,22 @@ onUnmounted(() => {
   z-index: 20;
 }
 
-.floating-icon {
+.menu-item-wrapper {
   position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.floating-icon {
+  position: relative;
   width: 40px;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: auto;
-  cursor: pointer;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(8px);
@@ -400,11 +403,21 @@ onUnmounted(() => {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
-.floating-icon.is-hovered {
+.menu-item-wrapper.is-hovered .floating-icon {
   transform: scale(1.15) translateY(-3px);
   background: rgba(255, 255, 255, 0.22);
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
   border-color: rgba(255, 255, 255, 0.35);
+}
+
+.item-label {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  letter-spacing: 0.5px;
 }
 
 .icon-index {

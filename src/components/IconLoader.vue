@@ -7,7 +7,7 @@
   >
     <img
       v-if="!hasError"
-      :src="currentIconSrc"
+      :src="displaySrc"
       :alt="alt"
       @load="onLoad"
       @error="onError"
@@ -26,7 +26,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
+import { getCachedIcon, cacheIcon } from '@/services/iconCache';
 
 const props = withDefaults(defineProps<{
   domain: string;
@@ -48,6 +49,7 @@ const emit = defineEmits<{
 const isLoading = ref(true);
 const hasError = ref(false);
 const currentSourceIndex = ref(0);
+const cachedSrc = ref<string | null>(null);
 
 // 提取域名（处理 URL 或纯域名）
 const cleanDomain = computed(() => {
@@ -83,10 +85,15 @@ const iconSources = computed(() => {
   ];
 });
 
-// 当前使用的图标源
+// 当前使用的图标源 URL
 const currentIconSrc = computed(() => {
   if (iconSources.value.length === 0) return '';
   return iconSources.value[currentSourceIndex.value] || '';
+});
+
+// 实际显示的图片源（优先使用缓存）
+const displaySrc = computed(() => {
+  return cachedSrc.value || currentIconSrc.value;
 });
 
 // 备用文字（取域名首字母）
@@ -98,14 +105,47 @@ const fallbackText = computed(() => {
   return mainPart.charAt(0).toUpperCase();
 });
 
-const onLoad = () => {
+// 尝试从缓存加载
+const tryLoadFromCache = () => {
+  const domain = cleanDomain.value;
+  if (!domain) return false;
+  
+  const cached = getCachedIcon(domain, currentSourceIndex.value);
+  if (cached) {
+    cachedSrc.value = cached;
+    isLoading.value = false;
+    hasError.value = false;
+    return true;
+  }
+  return false;
+};
+
+const onLoad = async () => {
   isLoading.value = false;
   hasError.value = false;
+  
+  // 加载成功后缓存图标
+  if (!cachedSrc.value && currentIconSrc.value) {
+    const domain = cleanDomain.value;
+    if (domain) {
+      const cached = await cacheIcon(domain, currentSourceIndex.value, currentIconSrc.value);
+      if (cached) {
+        cachedSrc.value = cached;
+      }
+    }
+  }
 };
 
 const onError = () => {
+  // 清除当前缓存尝试
+  cachedSrc.value = null;
+  
   if (currentSourceIndex.value < iconSources.value.length - 1) {
     currentSourceIndex.value++;
+    // 尝试从缓存加载下一个源
+    if (!tryLoadFromCache()) {
+      isLoading.value = true;
+    }
   } else {
     isLoading.value = false;
     hasError.value = true;
@@ -121,27 +161,49 @@ const handleClick = (e: MouseEvent) => {
   // 切换到下一个服务
   const nextIndex = (currentSourceIndex.value + 1) % iconSources.value.length;
   currentSourceIndex.value = nextIndex;
+  cachedSrc.value = null;
   isLoading.value = true;
   hasError.value = false;
+  
+  // 尝试从缓存加载
+  if (!tryLoadFromCache()) {
+    isLoading.value = true;
+  }
   
   emit('switch', nextIndex);
 };
 
+// 初始化时尝试从缓存加载
+onMounted(() => {
+  currentSourceIndex.value = props.initialSourceIndex || 0;
+  if (!tryLoadFromCache()) {
+    isLoading.value = true;
+  }
+});
+
 // 监听域名变化，重置状态
 watch(() => props.domain, () => {
-  isLoading.value = true;
+  cachedSrc.value = null;
   hasError.value = false;
   currentSourceIndex.value = props.initialSourceIndex || 0;
+  
+  if (!tryLoadFromCache()) {
+    isLoading.value = true;
+  }
 });
 
 // 监听初始索引变化
 watch(() => props.initialSourceIndex, (newIndex) => {
   if (newIndex !== undefined && newIndex !== currentSourceIndex.value) {
     currentSourceIndex.value = newIndex;
-    isLoading.value = true;
+    cachedSrc.value = null;
     hasError.value = false;
+    
+    if (!tryLoadFromCache()) {
+      isLoading.value = true;
+    }
   }
-}, { immediate: true });
+});
 </script>
 
 <style scoped>
