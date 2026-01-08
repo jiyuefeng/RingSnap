@@ -1,0 +1,52 @@
+{
+  "rules": [
+    {
+      "name": "GitHub仓库",
+      "pattern": "github\\.com\\/([^\\/]+)\\/([^\\/]+)",
+      "url": "https://github.com/{1}/{2}",
+      "icon": "github.com"
+    },
+    {
+      "name": "GitLab仓库",
+      "pattern": "gitlab\\.com\\/([^\\/]+)\\/([^\\/]+)",
+      "url": "https://gitlab.com/{1}/{2}",
+      "icon": "gitlab.com"
+    },
+    {
+      "name": "NPM包",
+      "pattern": "npmjs\\.com\\/package\\/([^\\/]+)",
+      "url": "https://www.npmjs.com/package/{1}",
+      "icon": "npmjs.com"
+    },
+    {
+      "name": "Jira工单",
+      "pattern": "([A-Z]+-\\d+)",
+      "url": "https://jira.example.com/browse/{1}",
+      "icon": "atlassian.com"
+    },
+    {
+      "name": "Google搜索",
+      "pattern": ".*",
+      "url": "https://www.google.com/search?q={text}",
+      "icon": "google.com"
+    },
+    {
+      "name": "Baidu搜索",
+      "pattern": ".*",
+      "url": "https://www.baidu.com/s?wd={text}",
+      "icon": "baidu.com"
+    },
+    {
+      "name": "Bing搜索",
+      "pattern": ".*",
+      "url": "https://www.bing.com/search?q={text}",
+      "icon": "bing.com"
+    },
+    {
+      "name": "Stack Overflow",
+      "pattern": ".*",
+      "url": "https://stackoverflow.com/search?q={text}",
+      "icon": "stackoverflow.com"
+    }
+  ]
+}
