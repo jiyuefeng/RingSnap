@@ -78,26 +78,29 @@ pub fn simulate_copy() -> Result<(), String> {
     #[cfg(not(target_os = "macos"))]
     let modifier = Key::Control;
     
+    // 先确保所有修饰键都被释放
+    thread::sleep(Duration::from_millis(50));
+    
     // 按下修饰键
     enigo.key(modifier, enigo::Direction::Press)
         .map_err(|e| format!("按下修饰键失败: {}", e))?;
     
     // 短暂延迟
-    thread::sleep(Duration::from_millis(10));
+    thread::sleep(Duration::from_millis(20));
     
     // 按下并释放 C 键
     enigo.key(Key::Unicode('c'), enigo::Direction::Click)
         .map_err(|e| format!("按下C键失败: {}", e))?;
     
     // 短暂延迟
-    thread::sleep(Duration::from_millis(10));
+    thread::sleep(Duration::from_millis(20));
     
     // 释放修饰键
     enigo.key(modifier, enigo::Direction::Release)
         .map_err(|e| format!("释放修饰键失败: {}", e))?;
     
     // 等待系统处理复制操作
-    thread::sleep(Duration::from_millis(100));
+    thread::sleep(Duration::from_millis(150));
     
     Ok(())
 }
