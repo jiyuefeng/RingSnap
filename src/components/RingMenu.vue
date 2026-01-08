@@ -85,23 +85,24 @@
               class="settings-btn"
               @click.stop="handleSettingsClick"
               style="cursor: pointer;"
+              transform="translate(0, 28)"
             >
               <circle 
                 r="18" 
-                cy="28"
                 fill="rgba(255, 255, 255, 0.1)"
                 stroke="rgba(255, 255, 255, 0.2)"
                 stroke-width="1"
                 class="settings-bg"
               />
               <text 
-                y="28"
+                x="0"
+                y="0"
                 text-anchor="middle" 
                 dominant-baseline="central"
                 fill="rgba(255, 255, 255, 0.7)"
-                font-size="14"
+                font-size="16"
                 class="settings-icon"
-              >⚙️</text>
+              >⚙</text>
             </g>
           </g>
         </svg>
@@ -335,13 +336,9 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: rgba(20, 25, 40, 0.75);
+  background: rgba(20, 25, 40, 0.85);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 0 80px rgba(255, 255, 255, 0.03),
-    inset 0 0 4px rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 

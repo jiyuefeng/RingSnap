@@ -1,12 +1,16 @@
 /**
  * 规则存储模块
  * 使用 Tauri 的应用数据目录来存储规则，确保所有窗口共享同一份数据
+ * 默认规则从 public/config.json 读取（编译时嵌入）
  */
 
 use std::fs;
 use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
 use tauri::{AppHandle, Manager};
+
+/// 编译时嵌入默认配置文件内容
+const DEFAULT_CONFIG_JSON: &str = include_str!("../../public/config.json");
 
 /// URL 规则结构
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -35,55 +39,16 @@ pub struct RulesConfig {
     pub rules: Vec<UrlRule>,
 }
 
-/// 默认规则 - 预设用户配置的规则
+/// 从嵌入的配置文件获取默认规则
 fn get_default_rules() -> Vec<UrlRule> {
-    vec![
-        // 网易号视频
-        UrlRule {
-            name: "网易号视频".to_string(),
-            pattern: r"\w{8}".to_string(),
-            url: "https://www.163.com/v/video/{text}.html".to_string(),
-            icon: "163.com".to_string(),
-            enabled: true,
-            icon_source_index: 1,  // Google favicons
-        },
-        // Google搜索
-        UrlRule {
-            name: "Google搜索".to_string(),
-            pattern: r".*".to_string(),
-            url: "https://www.google.com/search?q={text}".to_string(),
-            icon: "google.com".to_string(),
-            enabled: true,
-            icon_source_index: 1,  // Google favicons
-        },
-        // Baidu搜索
-        UrlRule {
-            name: "Baidu搜索".to_string(),
-            pattern: r".*".to_string(),
-            url: "https://www.baidu.com/s?wd={text}".to_string(),
-            icon: "baidu.com".to_string(),
-            enabled: true,
-            icon_source_index: 0,  // icon.horse
-        },
-        // 网易号文章
-        UrlRule {
-            name: "网易号文章".to_string(),
-            pattern: r"\w{16}".to_string(),
-            url: "https://www.163.com/dy/article/{text}.html".to_string(),
-            icon: "163.com".to_string(),
-            enabled: true,
-            icon_source_index: 1,  // Google favicons
-        },
-        // 小蜜蜂
-        UrlRule {
-            name: "小蜜蜂".to_string(),
-            pattern: r"(YDJ|WFC)\w{13}".to_string(),
-            url: "https://bee.wfcacc.com/bee/check?id={text}".to_string(),
-            icon: "bee.wfcacc.com".to_string(),
-            enabled: true,
-            icon_source_index: 0,  // icon.horse
-        },
-    ]
+    // 解析编译时嵌入的默认配置
+    match serde_json::from_str::<RulesConfig>(DEFAULT_CONFIG_JSON) {
+        Ok(config) => config.rules,
+        Err(e) => {
+            eprintln!("解析默认配置失败: {}, 使用空规则列表", e);
+            Vec::new()
+        }
+    }
 }
 
 /// 获取规则文件路径

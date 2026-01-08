@@ -1,52 +1,44 @@
 {
   "rules": [
     {
-      "name": "GitHub仓库",
-      "pattern": "github\\.com\\/([^\\/]+)\\/([^\\/]+)",
-      "url": "https://github.com/{1}/{2}",
-      "icon": "github.com"
-    },
-    {
-      "name": "GitLab仓库",
-      "pattern": "gitlab\\.com\\/([^\\/]+)\\/([^\\/]+)",
-      "url": "https://gitlab.com/{1}/{2}",
-      "icon": "gitlab.com"
-    },
-    {
-      "name": "NPM包",
-      "pattern": "npmjs\\.com\\/package\\/([^\\/]+)",
-      "url": "https://www.npmjs.com/package/{1}",
-      "icon": "npmjs.com"
-    },
-    {
-      "name": "Jira工单",
-      "pattern": "([A-Z]+-\\d+)",
-      "url": "https://jira.example.com/browse/{1}",
-      "icon": "atlassian.com"
+      "name": "网易号视频",
+      "pattern": "\\w{8}",
+      "url": "https://www.163.com/v/video/{text}.html",
+      "icon": "163.com",
+      "enabled": true,
+      "iconSourceIndex": 1
     },
     {
       "name": "Google搜索",
       "pattern": ".*",
       "url": "https://www.google.com/search?q={text}",
-      "icon": "google.com"
+      "icon": "google.com",
+      "enabled": true,
+      "iconSourceIndex": 1
     },
     {
       "name": "Baidu搜索",
       "pattern": ".*",
       "url": "https://www.baidu.com/s?wd={text}",
-      "icon": "baidu.com"
+      "icon": "baidu.com",
+      "enabled": true,
+      "iconSourceIndex": 0
     },
     {
-      "name": "Bing搜索",
-      "pattern": ".*",
-      "url": "https://www.bing.com/search?q={text}",
-      "icon": "bing.com"
+      "name": "网易号文章",
+      "pattern": "\\w{16}",
+      "url": "https://www.163.com/dy/article/{text}.html",
+      "icon": "163.com",
+      "enabled": true,
+      "iconSourceIndex": 1
     },
     {
-      "name": "Stack Overflow",
-      "pattern": ".*",
-      "url": "https://stackoverflow.com/search?q={text}",
-      "icon": "stackoverflow.com"
+      "name": "小蜜蜂",
+      "pattern": "(YDJ|WFC)\\w{13}",
+      "url": "https://bee.wfcacc.com/bee/check?id={text}",
+      "icon": "bee.wfcacc.com",
+      "enabled": true,
+      "iconSourceIndex": 0
     }
   ]
 }
