@@ -35,72 +35,53 @@ pub struct RulesConfig {
     pub rules: Vec<UrlRule>,
 }
 
-/// 默认规则
+/// 默认规则 - 预设用户配置的规则
 fn get_default_rules() -> Vec<UrlRule> {
     vec![
-        UrlRule {
-            name: "GitHub仓库".to_string(),
-            pattern: r"github\.com\/([^\/]+)\/([^\/]+)".to_string(),
-            url: "https://github.com/{1}/{2}".to_string(),
-            icon: "github.com".to_string(),
-            enabled: true,
-            icon_source_index: 0,
-        },
-        UrlRule {
-            name: "GitLab仓库".to_string(),
-            pattern: r"gitlab\.com\/([^\/]+)\/([^\/]+)".to_string(),
-            url: "https://gitlab.com/{1}/{2}".to_string(),
-            icon: "gitlab.com".to_string(),
-            enabled: true,
-            icon_source_index: 0,
-        },
-        UrlRule {
-            name: "NPM包".to_string(),
-            pattern: r"npmjs\.com\/package\/([^\/]+)".to_string(),
-            url: "https://www.npmjs.com/package/{1}".to_string(),
-            icon: "npmjs.com".to_string(),
-            enabled: true,
-            icon_source_index: 0,
-        },
+        // 网易号视频
         UrlRule {
             name: "网易号视频".to_string(),
-            pattern: r".*".to_string(),
+            pattern: r"\w{8}".to_string(),
             url: "https://www.163.com/v/video/{text}.html".to_string(),
             icon: "163.com".to_string(),
             enabled: true,
-            icon_source_index: 0,
+            icon_source_index: 1,  // Google favicons
         },
+        // Google搜索
         UrlRule {
             name: "Google搜索".to_string(),
             pattern: r".*".to_string(),
             url: "https://www.google.com/search?q={text}".to_string(),
             icon: "google.com".to_string(),
             enabled: true,
-            icon_source_index: 0,
+            icon_source_index: 1,  // Google favicons
         },
+        // Baidu搜索
         UrlRule {
             name: "Baidu搜索".to_string(),
             pattern: r".*".to_string(),
             url: "https://www.baidu.com/s?wd={text}".to_string(),
             icon: "baidu.com".to_string(),
             enabled: true,
-            icon_source_index: 0,
+            icon_source_index: 0,  // icon.horse
         },
+        // 网易号文章
         UrlRule {
-            name: "Bing搜索".to_string(),
-            pattern: r".*".to_string(),
-            url: "https://www.bing.com/search?q={text}".to_string(),
-            icon: "bing.com".to_string(),
+            name: "网易号文章".to_string(),
+            pattern: r"\w{16}".to_string(),
+            url: "https://www.163.com/dy/article/{text}.html".to_string(),
+            icon: "163.com".to_string(),
             enabled: true,
-            icon_source_index: 0,
+            icon_source_index: 1,  // Google favicons
         },
+        // 小蜜蜂
         UrlRule {
-            name: "Stack Overflow".to_string(),
-            pattern: r".*".to_string(),
-            url: "https://stackoverflow.com/search?q={text}".to_string(),
-            icon: "stackoverflow.com".to_string(),
+            name: "小蜜蜂".to_string(),
+            pattern: r"(YDJ|WFC)\w{13}".to_string(),
+            url: "https://bee.wfcacc.com/bee/check?id={text}".to_string(),
+            icon: "bee.wfcacc.com".to_string(),
             enabled: true,
-            icon_source_index: 0,
+            icon_source_index: 0,  // icon.horse
         },
     ]
 }
