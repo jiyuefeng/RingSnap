@@ -4,7 +4,7 @@
 
 ## 功能特性
 
-- 🎯 **全局快捷键触发** - macOS: `Cmd+Shift+Space` / Windows/Linux: `Ctrl+Shift+Space`
+- 🎯 **全局快捷键触发** - macOS: `Cmd+Shift+R` / Windows/Linux: `Ctrl+Shift+R`
 - 🔗 **智能URL匹配** - 支持正则表达式匹配和参数提取
 - 🎨 **毛玻璃圆环菜单** - 美观的半透明UI设计
 - 🌐 **跨平台支持** - 支持 macOS、Windows 和 Linux
@@ -34,8 +34,8 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-username/ringsnap.git
-cd ringsnap
+git clone https://github.com/jiyuefeng/RingSnap.git
+cd RingSnap
 
 # 安装 Node.js 依赖
 npm install
@@ -59,7 +59,7 @@ npm run tauri build
 
 1. 启动应用后，程序将在后台运行
 2. 在任意应用中选择并复制文本（Cmd/Ctrl+C）
-3. 按下快捷键 `Cmd+Shift+Space`（macOS）或 `Ctrl+Shift+Space`（Windows/Linux）
+3. 按下快捷键 `Cmd+Shift+R`（macOS）或 `Ctrl+Shift+R`（Windows/Linux）
 4. 圆环菜单将显示匹配的规则
 5. 点击菜单项或按数字键 1-9 选择，将在浏览器中打开对应链接
 
