@@ -124,6 +124,28 @@ ringsnap/
 └── docs/                 # 文档
 ```
 
+## 安装说明
+
+### macOS
+
+下载 `.dmg` 文件后，如果出现 **"xxx已损坏，无法打开"** 的提示，这是因为应用没有经过 Apple 签名。请在终端执行以下命令解除限制：
+
+```bash
+# 解除应用的隔离属性
+sudo xattr -rd com.apple.quarantine /Applications/RingSnap.app
+```
+
+或者在 **系统设置 > 隐私与安全性** 中点击"仍要打开"。
+
+### Windows
+
+下载 `.msi` 或 `.exe` 安装包，双击安装即可。
+
+### Linux
+
+- **Ubuntu/Debian**: 下载 `.deb` 文件，使用 `sudo dpkg -i RingSnap_x.x.x_amd64.deb` 安装
+- **其他发行版**: 下载 `.AppImage` 文件，添加执行权限后运行
+
 ## 许可证
 
 MIT License
